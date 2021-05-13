@@ -7,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import datetime as dt
 
+
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
@@ -14,13 +15,34 @@ def scrape_all():
 
     news_title, news_paragraph = mars_news(browser)
 
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+    hemisphere_image_urls = []
+    links = browser.find_by_css('a.product-item img')
+
+    for i in range(len(links)):
+        hemisphere = {}
+        browser.find_by_css('a.product-item img')[i].click()
+        
+    #   Find image anchor tag 
+        sample_element = browser.links.find_by_text('Sample').first
+        hemisphere['img_url'] = sample_element['href']
+        hemisphere['title'] = browser.find_by_css('h2.title').text
+        hemisphere_image_urls.append(hemisphere)
+        browser.back()
+
+        print(hemisphere_image_urls) 
+
+
     # Run all scraping functions and store results in a dictionary
     data = {
         "news_title": news_title,
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()
+        "last_modified": dt.datetime.now(),
+        "hemisphere": hemisphere_image_urls
+
     }
 
     # Stop webdriver and return data
@@ -90,10 +112,11 @@ def mars_facts():
 
     return df.to_html()
 
-# Run all scraping functions and store results in dictionary
+
+ # Run all scraping functions and store results in dictionary
 if __name__ == "__main__":
 
-    # If running as script, print scraped data
+     # If running as script, print scraped data
     print(scrape_all())
 
 
