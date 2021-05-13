@@ -110,7 +110,7 @@ def mars_facts():
     df.columns=['description', 'Mars', 'Earth']
     df.set_index('description', inplace=True)
 
-    return df.to_html()
+    return df.to_html(classes="table table-striped")
 
 
  # Run all scraping functions and store results in dictionary
